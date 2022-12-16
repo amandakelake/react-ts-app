@@ -8,8 +8,7 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "lint": "eslint --fix src/**/*.{ts,tsx}",
-        "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-        "json-server": "json-server --watch __json_server_mock__/db.json --port 3001 --middlewares __json_server_mock__/middleware.cjs"
+        "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
     },
     "dependencies": {
         "qs": "^6.11.0",
