@@ -16,6 +16,7 @@ export const register = (data: LoginParam) => {
         console.error('缺失必填项');
         return Promise.reject('缺失必填项');
     }
+
     return fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
