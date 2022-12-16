@@ -1,8 +1,6 @@
 import React from 'react';
 import { Param, User } from './index';
 
-
-
 export interface SearchPanelProps {
     users: User[]
     param: Param
@@ -22,7 +20,7 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
             })}>
                 <option value={''}>负责人</option>
                 {
-                    users.map(user => <option key={user.id} value={user.id}>{user.name}</option>)
+                    users.map(user => <option key={user.id} value={user.id}>{user.username}</option>)
                 }
             </select>
         </div>
