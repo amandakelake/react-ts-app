@@ -1,13 +1,11 @@
 import qs from 'qs';
 import React, { useEffect, useState } from 'react';
+import { API_URL } from '../../common/env';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useMount } from '../../hooks/useMount';
 import { cleanObject } from '../../utils';
 import { List } from './list';
 import { SearchPanel } from './search-panel';
-
-const apiUrl = import.meta.env.VITE_API_URL;
-console.log('apiUrl', apiUrl)
 
 export interface Param {
     name: string
@@ -35,7 +33,7 @@ export const ProjectListScreen = () => {
     const debouncedParam = useDebounce(param, 200);
 
     useEffect(() => {
-        fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(async response => {
+        fetch(`${API_URL}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(async response => {
             if (response.ok) {
                 setList(await response.json());
             }
@@ -43,7 +41,7 @@ export const ProjectListScreen = () => {
     }, [debouncedParam]);
 
     useMount(() => {
-        fetch(`${apiUrl}/users`).then(async response => {
+        fetch(`${API_URL}/users`).then(async response => {
             if (response.ok) {
                 setUsers(await response.json());
             }
