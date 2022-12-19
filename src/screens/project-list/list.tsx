@@ -1,3 +1,5 @@
+import { Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import React from 'react';
 import { Project, User } from './index';
 
@@ -7,20 +9,27 @@ export interface ListProps {
 }
 
 export const List = ({ users, list }: ListProps) => {
-    return <table>
-        <thead>
-        <tr>
-            <th>系统名称</th>
-            <th>负责人</th>
-        </tr>
-        </thead>
-        <tbody>
+    const columns: ColumnsType<Project> = [
         {
-            list.map(project => <tr key={project.id}>
-                <td>{project.name}</td>
-                <td>{users.find(user => user.id === project.personId)?.username || 'unKnown'}</td>
-            </tr>)
-        }
-        </tbody>
-    </table>;
+            title: '系统名称',
+            key: 'name',
+            dataIndex: 'name'
+        },
+        {
+            title: '组织',
+            key: 'organization',
+            dataIndex: 'organization'
+        },
+        {
+            title: '负责人',
+            key: 'person',
+            dataIndex: 'personId',
+            render: (value, record) => {
+                return users.find(user => user.id === value)?.username || 'Not Found'
+            }
+        },
+    ];
+    return (
+        <Table dataSource={list} columns={columns} rowKey={columns => columns.id} />
+    );
 };

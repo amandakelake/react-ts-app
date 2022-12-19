@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { API_URL } from '../../common/env';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useMount } from '../../hooks/useMount';
 import { cleanObject } from '../../utils';
@@ -35,11 +34,11 @@ export const ProjectListScreen = () => {
     const client = useHttp();
 
     useEffect(() => {
-         client('projects', { data: cleanObject(debouncedParam) }).then(setList);
+        client('projects', { data: cleanObject(debouncedParam) }).then(setList);
     }, [debouncedParam]);
 
     useMount(() => {
-        client('users').then(setUsers)
+        client('users').then(setUsers);
     });
 
     return <div>

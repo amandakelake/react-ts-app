@@ -11,6 +11,8 @@
         "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
     },
     "dependencies": {
+        "@emotion/react": "^11.10.5",
+        "@emotion/styled": "^11.10.5",
         "antd": "^5.0.7",
         "qs": "^6.11.0",
         "react": "^18.2.0",
