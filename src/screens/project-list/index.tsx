@@ -43,6 +43,6 @@ export const ProjectListScreen = () => {
 
     return <div>
         <SearchPanel param={param} setParam={setParam} users={users} />
-        <List users={users} list={list} />
+        <List users={users} dataSource={list} />
     </div>;
 };
