@@ -15,7 +15,7 @@ const defaultInitialState: State<null> = {
 export const useAsync = <D>(initialState?: State<D>) => {
     const [state, setState] = useState<State<D>>({
         ...defaultInitialState,
-        ...initialState,
+        ...initialState || {},
     });
 
     const setData = (data: D) => setState({

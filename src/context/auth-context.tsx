@@ -1,5 +1,7 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import * as auth from '../auth-provider';
+import { FullPageError, FullPageLoading } from '../components/full-page';
+import { useAsync } from '../hooks/useAsync';
 import { useMount } from '../hooks/useMount';
 import { User } from '../screens/project-list';
 import { http } from '../utils/http';
@@ -12,11 +14,11 @@ interface AuthForm {
 const bootstrapUser = async () => {
     let user = null;
     const token = auth.getToken();
-    console.log('bootstrapUser -> token: ', token)
+    console.log('bootstrapUser -> token: ', token);
     // 如果当前localStorage里的token未过期，重新拉取个人信息，
     if (token) {
         const data = await http('user/me', { token });
-        console.log('bootstrapUser -> data: ', data)
+        console.log('bootstrapUser -> data: ', data);
         user = data;
     }
     return user;
@@ -31,16 +33,24 @@ const AuthContext = React.createContext<{
 AuthContext.displayName = 'AuthContext';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
+    const { run, isError, isLoading, isIdle, error, data: user, setData: setUser } = useAsync<User | null>();
 
     const login = (form: AuthForm) => auth.login(form).then(user => setUser(user));
     const register = (form: AuthForm) => auth.register(form).then(user => setUser(user));
     const logout = () => auth.logout().then(() => setUser(null));
 
-    useMount(() => {
+    useMount(async () => {
         // 初始化，判断一次token
-        bootstrapUser().then(setUser);
+        await run(bootstrapUser());
     });
+
+    if (isIdle || isLoading) {
+        return <FullPageLoading />;
+    }
+
+    if (isError) {
+        return <FullPageError error={error} />;
+    }
 
     return <AuthContext.Provider children={children} value={{ user, login, register, logout }} />;
 };
