@@ -1,18 +1,26 @@
 import { Button, Form, Input } from 'antd';
 import React from 'react';
 import { useAuth } from '../context/auth-context';
+import { useAsync } from '../hooks/useAsync';
 
 export interface LoginParam {
     username: string
     password: string
 }
 
-export const LoginScreen: React.FC = () => {
+export const LoginScreen = ({ onError }: { onError: (error: Error) => void }) => {
     const { login } = useAuth();
+    const { run, isLoading } = useAsync();
 
-    const handleSubmit = (values: { username: string, password: string }) => {
-        console.log('handleSubmit', values);
-        login({ username: values.username, password: values.password }).then(() => console.log('登录成功！'));
+    const handleSubmit = async (values: { username: string, password: string }) => {
+        try {
+            const { username, password } = values;
+            await run(login({ username, password }))
+        } catch (e) {
+            console.log('login error', e)
+            // @ts-ignore
+            onError(e);
+        }
     };
 
     return <Form onFinish={handleSubmit}>
@@ -25,7 +33,7 @@ export const LoginScreen: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-            <Button type="primary" htmlType="submit">登录</Button>
+            <Button loading={isLoading} type="primary" htmlType="submit">登录</Button>
         </Form.Item>
     </Form>;
 };

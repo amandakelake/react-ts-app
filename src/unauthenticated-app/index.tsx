@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Button, Card, Divider } from 'antd';
+import { Button, Card, Divider, Typography } from 'antd';
 import { useState } from 'react';
 import { ReactViteLogo } from '../components/logo';
 import { LoginScreen } from './login';
@@ -7,13 +7,19 @@ import { RegisterScreen } from './register';
 
 export const UnauthenticatedApp = () => {
     const [isRegister, setIsRegister] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
+    const switchAction = () => {
+        setError(null);
+        setIsRegister(!isRegister);
+    };
 
     return <div>
         <ReactViteLogo />
         <ShadowCard>
-            {isRegister ? <RegisterScreen /> : <LoginScreen />}
+            {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
+            {isRegister ? <RegisterScreen onError={setError} /> : <LoginScreen onError={setError} />}
             <Divider />
-            <Button type={'link'} onClick={() => setIsRegister(!isRegister)}>
+            <Button type={'link'} onClick={switchAction}>
                 {isRegister ? '已有账号，直接登录' : '没有账号？注册新账号'}
             </Button>
         </ShadowCard>

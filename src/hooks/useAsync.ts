@@ -15,7 +15,7 @@ const defaultInitialState: State<null> = {
 export const useAsync = <D>(initialState?: State<D>) => {
     const [state, setState] = useState<State<D>>({
         ...defaultInitialState,
-        ...defaultInitialState,
+        ...initialState,
     });
 
     const setData = (data: D) => setState({
@@ -45,7 +45,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
                 return data;
             }).catch(error => {
                 setError(error);
-                return error;
+                // 直接return，外部无法捕捉异常，必须再次抛出异常
+                return Promise.reject(error);
             });
     };
 
