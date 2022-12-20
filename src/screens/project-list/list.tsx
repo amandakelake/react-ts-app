@@ -3,7 +3,7 @@ import type { ColumnsType } from 'antd/es/table';
 import React from 'react';
 import { Project, User } from './index';
 
-export interface ListProps extends TableProps<Project>{
+export interface ListProps extends TableProps<Project> {
     users: User[]
 }
 
@@ -23,9 +23,7 @@ export const List = ({ users, ...props }: ListProps) => {
             title: '负责人',
             key: 'person',
             dataIndex: 'personId',
-            render: (value, record) => {
-                return users.find(user => user.id === value)?.username || 'Not Found';
-            },
+            render: (value) => users.find(user => user.id === value)?.username || 'Not Found'
         },
     ];
     return (

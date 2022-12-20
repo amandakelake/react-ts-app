@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { Typography } from 'antd';
+import React, { useState } from 'react';
+import { useProjects } from '../../api/useProjects';
+import { useUsers } from '../../api/useUsers';
 import { useDebounce } from '../../hooks/useDebounce';
-import { useMount } from '../../hooks/useMount';
-import { cleanObject } from '../../utils';
-import { useHttp } from '../../utils/http';
 import { List } from './list';
 import { SearchPanel } from './search-panel';
 
@@ -27,22 +27,24 @@ export interface Project {
 
 export const ProjectListScreen = () => {
     const [param, setParam] = useState<Param>({ name: '', personId: '' });
-    const [users, setUsers] = useState<User[]>([]);
-    const [list, setList] = useState<Project[]>([]);
-
     const debouncedParam = useDebounce(param, 200);
-    const client = useHttp();
 
-    useEffect(() => {
-        client('projects', { data: cleanObject(debouncedParam) }).then(setList);
-    }, [debouncedParam]);
-
-    useMount(() => {
-        client('users').then(setUsers);
-    });
+    const { isLoading, error, data: list } = useProjects(debouncedParam);
+    const { data: users } = useUsers();
 
     return <div>
-        <SearchPanel param={param} setParam={setParam} users={users} />
-        <List users={users} dataSource={list} />
+        <SearchPanel
+            param={param}
+            setParam={setParam}
+            users={users || []}
+        />
+
+        {error ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> : null}
+
+        <List
+            users={users || []}
+            dataSource={list || []}
+            loading={isLoading}
+        />
     </div>;
 };
