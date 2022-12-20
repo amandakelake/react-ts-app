@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Button, Card, Divider, Typography } from 'antd';
 import { useState } from 'react';
 import { ReactViteLogo } from '../components/logo';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { LoginScreen } from './login';
 import { RegisterScreen } from './register';
 
@@ -12,6 +13,8 @@ export const UnauthenticatedApp = () => {
         setError(null);
         setIsRegister(!isRegister);
     };
+
+    useDocumentTitle('注册登录', false)
 
     return <div>
         <ReactViteLogo />

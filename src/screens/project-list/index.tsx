@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useProjects } from '../../api/useProjects';
 import { useUsers } from '../../api/useUsers';
 import { useDebounce } from '../../hooks/useDebounce';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { List } from './list';
 import { SearchPanel } from './search-panel';
 
@@ -31,6 +32,8 @@ export const ProjectListScreen = () => {
 
     const { isLoading, error, data: list } = useProjects(debouncedParam);
     const { data: users } = useUsers();
+
+    useDocumentTitle('列表', false)
 
     return <div>
         <SearchPanel
