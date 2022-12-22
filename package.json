@@ -8,10 +8,12 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "lint": "eslint --fix src/**/*.{ts,tsx}",
-        "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-        "json-server": "json-server --watch __json_server_mock__/db.json --port 3001"
+        "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
     },
     "dependencies": {
+        "@emotion/react": "^11.10.5",
+        "@emotion/styled": "^11.10.5",
+        "antd": "^5.0.7",
         "qs": "^6.11.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"

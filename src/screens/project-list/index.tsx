@@ -1,13 +1,11 @@
-import qs from 'qs';
-import React, { useEffect, useState } from 'react';
+import { Typography } from 'antd';
+import React, { useState } from 'react';
+import { useProjects } from '../../api/useProjects';
+import { useUsers } from '../../api/useUsers';
 import { useDebounce } from '../../hooks/useDebounce';
-import { useMount } from '../../hooks/useMount';
-import { cleanObject } from '../../utils';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { List } from './list';
 import { SearchPanel } from './search-panel';
-
-const apiUrl = import.meta.env.VITE_API_URL;
-console.log('apiUrl', apiUrl)
 
 export interface Param {
     name: string
@@ -16,7 +14,8 @@ export interface Param {
 
 export interface User {
     id: number
-    name: string
+    username: string
+    token: string
 }
 
 export interface Project {
@@ -29,29 +28,26 @@ export interface Project {
 
 export const ProjectListScreen = () => {
     const [param, setParam] = useState<Param>({ name: '', personId: '' });
-    const [users, setUsers] = useState<User[]>([]);
-    const [list, setList] = useState<Project[]>([]);
-
     const debouncedParam = useDebounce(param, 200);
 
-    useEffect(() => {
-        fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(async response => {
-            if (response.ok) {
-                setList(await response.json());
-            }
-        });
-    }, [debouncedParam]);
+    const { isLoading, error, data: list } = useProjects(debouncedParam);
+    const { data: users } = useUsers();
 
-    useMount(() => {
-        fetch(`${apiUrl}/users`).then(async response => {
-            if (response.ok) {
-                setUsers(await response.json());
-            }
-        });
-    });
+    useDocumentTitle('列表', false)
 
     return <div>
-        <SearchPanel param={param} setParam={setParam} users={users} />
-        <List users={users} list={list} />
+        <SearchPanel
+            param={param}
+            setParam={setParam}
+            users={users || []}
+        />
+
+        {error ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> : null}
+
+        <List
+            users={users || []}
+            dataSource={list || []}
+            loading={isLoading}
+        />
     </div>;
 };
